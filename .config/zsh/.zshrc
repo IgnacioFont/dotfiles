@@ -1,4 +1,5 @@
-
+# Aliases
+alias dotfiles='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
 
 # History in cache directory
 HISTSIZE=10000
