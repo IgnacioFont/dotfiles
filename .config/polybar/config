@@ -1,0 +1,169 @@
+ 
+; vim:ft=dosini
+;=====================================================
+;
+;   To learn more about how to configure Polybar
+;   go to https://github.com/jaagr/polybar
+;
+;   The README contains alot of information
+;
+;=====================================================
+
+[colors]
+black = ${xrdb:color0:#1d2021}
+darkred = ${xrdb:color1:#cc241d}
+darkgreen = ${xrdb:color2:#98971a}
+darkyellow = ${xrdb:color3:#d79921}
+darkblue = ${xrdb:color4:#458588}
+darkmagenta = ${xrdb:color5:#b16286}
+darkcyan = ${xrdb:color6:#689d6a}
+lightgray = ${xrdb:color7:#a89984}
+gray = ${xrdb:color8:#928374}
+red = ${xrdb:color9:#fb4934}
+green = ${xrdb:color10:#b8bb26}
+yellow = ${xrdb:color11:#fabd2f}
+blue = ${xrdb:color12:#83a598}
+magenta = ${xrdb:color13:#d3869b}
+cyan = ${xrdb:color14:#8ec07c}
+white = ${xrdb:color15:#ebdbb2}
+background = ${xrdb:color256:[90]#1d2021}
+foreground = ${xrdb:color257:#ebdbb2}
+
+[bar/default]
+enable-ipc = true
+width = 100%
+height = 24
+fixed-center = false
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 3
+line-color = {$xrdb:red}
+
+border-size = 0
+border-color = ${colors.white}
+
+padding-left = 0
+padding-right = 0
+
+module-margin-left = 1
+module-margin-right = 1
+
+font-0 = Fira Code Nerd:pixelsize=9;1
+font-1 = FontAwesome:size=8;1
+font-2 = Noto Color Emoji:scale=10:style=Regular;2
+font-3 = Symbola:pixelsize=9;1
+
+modules-left = i3
+modules-right = volume xkeyboard wlan date 
+
+tray-position = right
+tray-padding = 0
+
+scroll-up = i3wm-wsnext
+scroll-down = i3wm-wsprev
+;override-redirect = true
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:45:...%
+format-foreground = ${colors.blue}
+
+[module/xkeyboard]
+type = internal/xkeyboard
+blacklist-0 = num lock
+
+format-prefix-foreground = ${colors.gray}
+format-prefix-underline = ${colors.darkmagenta}
+
+label-layout = %layout%
+label-layout-underline = ${colors.darkmagenta}
+
+label-indicator-padding = 2
+label-indicator-margin = 1
+label-indicator-background = ${colors.darkmagenta}
+label-indicator-underline = ${colors.darkmagenta}
+
+[module/i3]
+type = internal/i3
+strip-wsnumbers = false
+index-sort = true
+enable-click = false
+enable-scroll = false
+wrapping-scroll = false
+reverse-scroll = false
+fuzzy-match = true
+label-focused-foreground = #ffffff
+label-focused-background = #3f3f3f
+label-focused-padding = 1
+label-unfocused-padding = 1
+
+[module/wlan]
+type = internal/network
+interface = wlx00265a0e2a03 
+interval = 3.0
+
+format-connected = <ramp-signal> <label-connected>
+
+ramp-signal-0 = 😱
+ramp-signal-1 = 😠
+ramp-signal-2 = 😒
+ramp-signal-3 = 
+ramp-signal-4 = 
+ramp-signal-5 = 
+
+label-connected = %essid% 
+label-connected-foreground = #eefafafa
+
+[module/date]
+type = internal/date
+interval = 60
+
+date = "%a %d %b %Y"
+time = %H:%M
+;time = "%I:%M%p"
+;
+format-prefix-foreground = ${colors.gray}
+format-underline = ${colors.blue}
+
+label = %date% %time%
+
+[module/volume]
+type = internal/alsa
+interval = 0.3
+format-volume = <label-volume> <bar-volume>
+label-volume = 
+label-volume-foreground = ${root.foreground}
+
+format-muted-prefix = " "
+format-muted-foreground = ${colors.gray}
+label-muted = muted
+
+bar-volume-width = 10
+bar-volume-foreground-0 = ${colors.blue}
+bar-volume-foreground-1 = ${colors.blue}
+bar-volume-foreground-2 = ${colors.green}
+bar-volume-foreground-3 = ${colors.green}
+bar-volume-foreground-4 = ${colors.green}
+bar-volume-foreground-5 = ${colors.yellow}
+bar-volume-foreground-6 = ${colors.red}
+bar-volume-gradient = false
+bar-volume-indicator = |
+bar-volume-indicator-font = 2
+bar-volume-fill = =
+bar-volume-fill-font = 2
+bar-volume-empty = =
+bar-volume-empty-font = 2
+bar-volume-empty-foreground = ${colors.gray}
+
+[settings]
+screenchange-reload = true
+;compositing-background = xor
+;compositing-background = screen
+;compositing-foreground = source
+;compositing-border = over
+
+[global/wm]
+margin-top = 5
+margin-bottom = 5
