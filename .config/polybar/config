@@ -55,7 +55,7 @@ font-1 = FontAwesome:size=8;1
 font-2 = Noto Color Emoji:scale=10:style=Regular;2
 font-3 = Symbola:pixelsize=9;1
 
-modules-left = i3
+modules-left = i3 title
 modules-right = volume xkeyboard wlan date 
 
 tray-position = right
@@ -69,6 +69,9 @@ scroll-down = i3wm-wsprev
 type = internal/xwindow
 label = %title:0:45:...%
 format-foreground = ${colors.blue}
+
+[module/title]
+type = internal/xwindow
 
 [module/xkeyboard]
 type = internal/xkeyboard

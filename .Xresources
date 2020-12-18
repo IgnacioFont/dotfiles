@@ -1,4 +1,4 @@
-URxvt.font: xft:Noto Sans Mono:size=10
+URxvt.font: xft:FiraMono Nerd Font Mono:size=10
 URxvt.colorUL: #4682B4
 URxvt.scrollBar: false
 URxvt.perl-ext-common: default,matcher,fullscreen,url-select,keyboard-select,resize-font

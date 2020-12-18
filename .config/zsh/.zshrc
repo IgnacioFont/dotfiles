@@ -56,14 +56,21 @@ zle -N self-insert url-quote-magic
 # Syntax highlighters
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 
-# Spaceship Prompt
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Spaceship Promp
+
+SPACESHIP_PROMPT_ORDER=(user host dir git node exec_time line_sep jobs exit_code char)
+
 SPACESHIP_PROMPT_ADD_NEWLINE=false
 SPACESHIP_PROMPT_SEPARATE_LINE=false
 SPACESHIP_PROMPT_FIRST_PREFIX_SHOW=false
-SPACESHIP_CHAR_SYMBOL='>:'
+SPACESHIP_CHAR_SYMBOL='λ'
 SPACESHIP_CHAR_SUFFIX=' '
 SPACESHIP_USER_SHOW=true
 SPACESHIP_PACKAGE_SHOW=false
-
+SPACESHIP_VI_MODE_SHOW=false
 source $HOME/.config/zsh/zfunctions/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $HOME/.config/zsh/zfunctions/spaceship-prompt/spaceship.zsh
