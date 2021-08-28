@@ -13,7 +13,7 @@ import qualified Data.Map        as M
 
 -- Startup
 myStartup = do
-    spawnOnce "~/.config/xmobar/.xmobarrc &"
+    spawnOnce "xmobar &"
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse = False
