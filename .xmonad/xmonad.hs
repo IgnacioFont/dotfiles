@@ -22,7 +22,13 @@ myFocusFollowsMouse = False
 myTerminal      = "kitty"
 
 -- Layout
-myLayout = avoidStruts (smartBorders (Tall 1 (3/100) (1/2))) ||| smartBorders Full
+myLayout = tiled ||| fullscreen
+  where
+    tiled      = avoidStruts $ smartBorders $ Tall nmaster delta ratio
+    fullscreen = smartBorders Full
+    nmaster    = 1
+    delta      = 3/100
+    ratio      = 1/2
 
 -- Key bindings 
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
