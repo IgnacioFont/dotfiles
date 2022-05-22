@@ -1,7 +1,31 @@
-local wo = vim.wo
+vim.cmd[[colorscheme gruvbox-material]]
 
-vim.cmd[[colorscheme nord]] -- Everforest is setting Gruvbox instead of itelf unless another theme is being set first, hence this Nord call
-vim.cmd[[colorscheme everforest]]
+local opts = {
+  cmdheight = 1,
+  number = true,
+  wrap = false,
+  tabstop = 2,
+  softtabstop = 2,
+  shiftwidth = 2,
+  hidden = true,
+  expandtab = true,
+  ignorecase = true,
+  smartcase = true,
+  clipboard = "unnamedplus",
+  cursorline = true,
+  inccommand = "nosplit",
+  swapfile = false,
+  undofile = true,
+  completeopt = "menu,noselect",
+  splitbelow = true,
+  splitright = true,
+  termguicolors = true,
+  scrolloff = 8,
+}
 
-wo.number = true
+vim.opt.shortmess:append "c"
 
+
+for k, v in pairs(opts) do
+  vim.o[k] = v
+end
