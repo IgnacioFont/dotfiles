@@ -1,0 +1,8 @@
+require 'plugins'
+require 'mappings'
+require 'options' 
+require 'configs.lsp'
+require 'configs.telescope'
+require 'configs.which-key'
+require 'configs.treesitter'
+require 'configs.dap'
