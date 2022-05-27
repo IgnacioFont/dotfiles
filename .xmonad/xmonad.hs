@@ -1,119 +1,93 @@
-import XMonad
-import Data.Monoid
-import System.Exit
+ 
+  import XMonad
+  import System.Exit
+  
+  import XMonad.Hooks.DynamicLog
+  import XMonad.Hooks.ManageDocks
+  import XMonad.Hooks.ManageHelpers
+  import XMonad.Hooks.StatusBar
+  import XMonad.Hooks.StatusBar.PP
 
-import XMonad.Util.Run (spawnPipe)
-import XMonad.Hooks.ManageDocks
-import XMonad.Layout.NoBorders (smartBorders)
-import XMonad.Util.SpawnOnce
+  import XMonad.Util.EZConfig
+  import XMonad.Util.Loggers
+  import XMonad.Util.Ungrab
 
-import qualified XMonad.StackSet as W
-import qualified Data.Map        as M
+  import XMonad.Layout.Magnifier
+  import XMonad.Layout.ThreeColumns
+  import XMonad.Layout.NoBorders
+  import XMonad.Hooks.EwmhDesktops
 
+  import qualified XMonad.StackSet as W
+  import qualified Data.Map        as M
 
--- Startup
-myStartup = do
-    spawnOnce "xmobar &"
+  main :: IO ()
+  main = xmonad
+       . ewmhFullscreen
+       . ewmh
+       . withEasySB (statusBarProp "xmobar $HOME/.config/xmobar/xmobarrc" (pure myXmobarPP)) defToggleStrutsKey
+       $ myConfig
 
--- Whether focus follows the mouse pointer.
-myFocusFollowsMouse = True
+  myConfig = def
+      { modMask    = mod4Mask      -- Rebind Mod to the Super key
+      , layoutHook = smartBorders myLayout      -- Use custom layouts
+      , manageHook = myManageHook  -- Match on certain windows
+      , focusedBorderColor = "#d98324"
+      }
+    `additionalKeysP`
+      [ ("M-S-z"        , spawn "xscreensaver-command -lock"                    )
+      , ("M-S-="        , unGrab *> spawn "scrot -s"                            )
+      , ("M-w"          , spawn "firefox"                                       )
+      , ("M-t"          , spawn "kitty"                                         )
+      , ("M-S-<Return>" , spawn "kitty"                                       )
+      , ("M-d"          , spawn "exe=`dmenu_path | dmenu` && eval \"exec $exe\"")
+      , ("M-S-q"        , kill                                                  )
+      , ("M-<Return>"   , windows W.swapMaster                                  )
+      , ("M-j"          , windows W.focusDown                                   )
+      , ("M-k"          , windows W.focusUp                                     )
+      , ("M-S-r"        , spawn "xmonad --recompile; xmonad --restart"          )
+      , ("M-S-<Esc>"    , io (exitWith ExitSuccess)                             )
+      , ("M-S-t"        , withFocused $ windows . W.sink                        )
+      , ("M-<L>"        , spawn "amixer set Master toggle"                      )
+      , ("M-<D>"        , spawn "amixer set Master 1%- unmute"                  )
+      , ("M-<U>"        , spawn "amixer set Master 1%+ unmute"                  )
+      , ("M-e"          , spawn "kitty lf"                                      )
+      ]
 
--- Preferred programs
-myTerminal      = "kitty"
+  myManageHook :: ManageHook
+  myManageHook = composeAll
+      [ isDialog            --> doFloat ]
 
--- Layout
-myLayout = tiled ||| fullscreen
-  where
-    tiled      = avoidStruts $ smartBorders $ Tall nmaster delta ratio
-    fullscreen = smartBorders Full
-    nmaster    = 1
-    delta      = 3/100
-    ratio      = 1/2
+  myLayout = tiled ||| Full -- ||| Mirror tiled 
+    where
+      tiled    = Tall nmaster delta ratio
+      nmaster  = 1      -- Default number of windows in the master pane
+      ratio    = 1/2    -- Default proportion of screen occupied by master pane
+      delta    = 3/100  -- Percent of screen to increment by when resizing panes
 
--- Key bindings 
-myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
+  myXmobarPP :: PP
+  myXmobarPP = def
+      { ppSep             = magenta " • "
+      , ppTitleSanitize   = xmobarStrip
+      , ppCurrent         = wrap " " "" . xmobarBorder "Top" "#8be9fd" 2
+      , ppHidden          = white . wrap " " ""
+      , ppHiddenNoWindows = lowWhite . wrap " " ""
+      , ppUrgent          = red . wrap (yellow "!") (yellow "!")
+      , ppOrder           = \[ws, l, _, wins] -> [ws, l, wins]
+      , ppExtras          = [logTitles formatFocused formatUnfocused]
+      }
+    where
+      formatFocused   = wrap (white    "[") (white    "]") . magenta . ppWindow
+      formatUnfocused = wrap (lowWhite "[") (lowWhite "]") . blue    . ppWindow
 
-    -- launch a terminal
-    [ ((modm, xK_Return), spawn $ XMonad.terminal conf)
+      -- | Windows should have *some* title, which should not not exceed a
+      -- sane length.
+      ppWindow :: String -> String
+      ppWindow = xmobarRaw . (\w -> if null w then "untitled" else w) . shorten 30
 
-    -- launch dmenu
-    , ((modm,               xK_d     ), spawn "exe=`dmenu_path | dmenu` && eval \"exec $exe\"")
-
-    -- close focused window
-    , ((modm,               xK_w     ), kill)
-
-     -- Rotate through the available layout algorithms
-    , ((modm,               xK_space ), sendMessage NextLayout)
-
-    --  Reset the layouts on the current workspace to default
-    , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
-
-    -- Resize viewed windows to the correct size
-    , ((modm,               xK_n     ), refresh)
-
-    -- Move focus to the next window
-    , ((modm,               xK_Tab   ), windows W.focusDown)
-
-    -- Move focus to the next window
-    , ((modm,               xK_j     ), windows W.focusDown)
-
-    -- Move focus to the previous window
-    , ((modm,               xK_k     ), windows W.focusUp  )
-
-    -- Move focus to the master window
-    , ((modm,               xK_m     ), windows W.focusMaster  )
-
-    -- Swap the focused window and the master window
-    , ((modm .|. shiftMask, xK_Return), windows W.swapMaster)
-
-    -- Swap the focused window with the next window
-    , ((modm .|. shiftMask, xK_j     ), windows W.swapDown  )
-
-    -- Swap the focused window with the previous window
-    , ((modm .|. shiftMask, xK_k     ), windows W.swapUp    )
-
-    -- Shrink the master area
-    , ((modm,               xK_h     ), sendMessage Shrink)
-
-    -- Expand the master area
-    , ((modm,               xK_l     ), sendMessage Expand)
-
-    -- Push window back into tiling
-    , ((modm,               xK_t     ), withFocused $ windows . W.sink)
-
-    -- Increment the number of windows in the master area
-    , ((modm              , xK_comma ), sendMessage (IncMasterN 1))
-
-    -- Deincrement the number of windows in the master area
-    , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
-
-    -- Toggle the status bar gap
-    , ((modm              , xK_b     ), sendMessage ToggleStruts)
-
-    -- Quit xmonad
-    , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
-
-    -- Restart xmonad
-    , ((modm              , xK_q     ), spawn "xmonad --recompile; xmonad --restart")
-    ]
-     ++
-
-    --  Workspaces keybindings 
-
-     [((m .|. modm, k), windows $ f i)
-        | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
-        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
-
-
-
-main = xmonad $ docks defaultConfig 
-        { modMask            = mod4Mask, -- Use Super instead of Alt
-          terminal           = myTerminal,
-	  keys               = myKeys,
-          layoutHook         = myLayout,
-	  startupHook        = myStartup,
-	  focusFollowsMouse  = myFocusFollowsMouse
-	  
-	}
-
-
+      blue, lowWhite, magenta, red, white, yellow :: String -> String
+      magenta  = xmobarColor "#ff79c6" ""
+      blue     = xmobarColor "#bd93f9" ""
+      white    = xmobarColor "#f8f8f2" ""
+      yellow   = xmobarColor "#f1fa8c" ""
+      red      = xmobarColor "#ff5555" ""
+      lowWhite = xmobarColor "#bbbbbb" ""
