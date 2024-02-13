@@ -1,4 +1,4 @@
-vim.cmd[[colorscheme gruvbox-material]]
+vim.cmd[[colorscheme mies]]
 vim.g.mapleader = " "
 
 local opts = {

@@ -1,13 +1,22 @@
 return require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
-  use 'sainnhe/everforest'
+
+  -- colorschemes
+  use 'karoliskoncevicius/distilled-vim'
+  use 'huyvohcmc/atlas.vim'
   use 'sainnhe/gruvbox-material'
+  use 'morhetz/gruvbox'
+  use 'zekzekus/menguless'
+  use 'jaredgorski/Mies.vim'
+  use 'robertmeta/nofrils'
+
+  -- useful stuff
   use { 'nvim-telescope/telescope.nvim', requires = { {'nvim-lua/plenary.nvim'} } }
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
-  use 'rebelot/kanagawa.nvim'
   use 'theprimeagen/harpoon'
   use 'mbbill/undotree'
   use 'tpope/vim-fugitive'
+  use 'tpope/vim-commentary'
   use {
   'VonHeikemen/lsp-zero.nvim',
   branch = 'v1.x',
