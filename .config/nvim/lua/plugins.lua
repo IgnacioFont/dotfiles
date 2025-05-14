@@ -17,6 +17,10 @@ return require('packer').startup(function(use)
   use 'mbbill/undotree'
   use 'tpope/vim-fugitive'
   use 'tpope/vim-commentary'
+--  use 'tpope/vim-rails'
+  use 'tpope/vim-dadbod'
+  use 'kristijanhusak/vim-dadbod-ui'
+  use 'kristijanhusak/vim-dadbod-completion'
   use {
   'VonHeikemen/lsp-zero.nvim',
   branch = 'v1.x',
@@ -39,4 +43,5 @@ return require('packer').startup(function(use)
     {'rafamadriz/friendly-snippets'}, -- Optional
   }
 }
+  use 'tpope/vim-rails'
 end)

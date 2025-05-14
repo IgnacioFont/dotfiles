@@ -7,3 +7,5 @@ require 'configs.treesitter'
 require 'configs.undotree'
 require 'configs.harpoon'
 require 'configs.fugitive'
+require 'configs.dadbod'
+
